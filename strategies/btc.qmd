@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Bitcoin Trend"
 subtitle: "Long / flat trend-following on BTC/USD"
 ---

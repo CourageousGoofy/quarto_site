@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Global Equity Rotation"
 subtitle: "Cross-country long / short ranking on value, quality, growth and momentum"
 ---
