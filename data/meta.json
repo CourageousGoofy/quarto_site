@@ -1,0 +1,37 @@
+{
+  "generated": "2026-11-16",
+  "btc": {
+    "asof": "2026-11-12",
+    "position": 0.0,
+    "regime": "n",
+    "price": 71477.04,
+    "backtest_exposure": 0.425
+  },
+  "gold": {
+    "asof": "2026-11-12",
+    "position": 0.0,
+    "regime": "neutral",
+    "price": 3877.07,
+    "fast_mode": 0,
+    "backtest_exposure": 0.582
+  },
+  "dca": {
+    "asof": "2026-11-12",
+    "longs": [
+      "Korea",
+      "Indonesia",
+      "Thailand",
+      "South Africa",
+      "Taiwan"
+    ],
+    "shorts": [
+      "Switzerland",
+      "Germany",
+      "Singapore",
+      "Australia",
+      "US - R2000",
+      "Italy"
+    ],
+    "backtest_end": "2026-11-01"
+  }
+}

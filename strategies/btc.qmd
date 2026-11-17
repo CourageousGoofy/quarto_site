@@ -1,0 +1,95 @@
+﻿---
+title: "Bitcoin Trend"
+subtitle: "Long / flat trend-following on BTC/USD"
+---
+
+```{python}
+import sys; sys.path.insert(0, "..")
+from site_helpers import *
+
+m = meta()["btc"]
+sig = load_signals("btc")
+bt = load_backtest("btc")
+```
+
+::: {.panel-tabset}
+
+## Latest signal
+
+```{python}
+signal_card("BTC / USD position", m["position"], m["asof"],
+            f'BTC {m["price"]:,.0f} · regime: {BTC_REGIMES[m["regime"]]}')
+```
+
+### Price and trend over the latest signal window
+
+```{python}
+recent_price_chart(sig, {
+    "band_upper": ("Upper band", "#ef4444", {"dash": "dot"}),
+    "band_mid":   ("Band mid", "#8b93a1", {"dash": "dash"}),
+    "band_lower": ("Lower band", "#22c55e", {"dash": "dot"}),
+    "trend_fast": ("Fast trend", C_STRAT, {"width": 2}),
+}, title_unit="USD")
+```
+
+<p class="legend-note">Background shading shows the position: green = long (darker = larger), grey = flat.</p>
+
+### Recent signals
+
+```{python}
+recent_signal_table(sig, regime_map=BTC_REGIMES)
+```
+
+[Download the latest signal file (CSV)](../data/btc_signals.csv){download="btc_signals.csv"}
+
+## Backtest
+
+```{python}
+s, bm = bt["strategy"], bt["benchmark"]
+st, sb = perf_stats(s, 252), perf_stats(bm, 252)
+stat_tiles([
+    ("CAGR", pct(st["CAGR"]), "pos" if st["CAGR"] > 0 else "neg"),
+    ("Volatility", pct(st["Volatility"], False), ""),
+    ("Sharpe", f'{st["Sharpe"]:.2f}', ""),
+    ("Max drawdown", pct(st["Max drawdown"], False), "neg"),
+    ("Time in market", f'{meta()["btc"]["backtest_exposure"]:.0%}', ""),
+])
+```
+
+<p class="asof">Daily, `{python} f"{bt.index[0]:%b %Y}"` to `{python} f"{bt.index[-1]:%b %Y}"`. Before transaction costs. The benchmark is buy-and-hold BTC.</p>
+
+### Growth of $1
+
+```{python}
+equity_chart({"Strategy": (s, C_STRAT, {}), "Buy & hold BTC": (bm, C_BENCH, {"dash": "dot", "width": 1.5})})
+```
+
+### Drawdowns
+
+```{python}
+drawdown_chart({"Strategy": (s, C_STRAT), "Buy & hold BTC": (bm, C_BENCH)})
+```
+
+### Calendar-year returns
+
+```{python}
+annual_returns_chart({"Strategy": (s, C_STRAT), "Buy & hold BTC": (bm, C_BENCH)})
+```
+
+### Summary statistics
+
+```{python}
+perf_table({"Strategy": s, "Buy & hold BTC": bm}, 252)
+```
+
+## How it works
+
+::: {.method}
+- **Universe:** bitcoin (BTC/USD), traded long or flat. The strategy never goes short.
+- **Regimes:** a slow, lagged volatility band sorts the market into bullish, neutral and bearish regimes. A breakout above the band starts a bull regime, and a break below starts a bear regime.
+- **Entry and exit:** inside a regime, a faster trend filter confirms or cancels exposure. The strategy holds a position only when the regime and the short-term trend agree.
+- **Execution:** signals are smoothed and positions move in half steps, which cuts whipsaw trades.
+- **Rebalance:** daily, at the close.
+:::
+
+:::

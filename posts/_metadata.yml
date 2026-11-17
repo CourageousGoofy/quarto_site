@@ -1,0 +1,3 @@
+# Applies to every post in this folder
+freeze: true          # posts with code are not re-run on each build
+title-block-banner: true

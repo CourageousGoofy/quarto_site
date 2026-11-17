@@ -1,0 +1,52 @@
+project:
+  type: website
+  output-dir: _site
+  resources:
+    - data/*.csv
+
+website:
+  title: "Systematic Signals"
+  description: "Latest signals and backtest results for three systematic strategies: global equity country rotation (DCA), gold and bitcoin."
+  site-url: "https://CourageousGoofy.github.io/quarto_site"
+  favicon: assets/favicon.svg
+  page-navigation: true
+  navbar:
+    logo: assets/favicon.svg
+    left:
+      - href: index.qmd
+        text: Overview
+      - text: Strategies
+        menu:
+          - href: strategies/dca.qmd
+            text: "Global Equity Rotation (DCA)"
+          - href: strategies/gold.qmd
+            text: "Gold Trend"
+          - href: strategies/btc.qmd
+            text: "Bitcoin Trend"
+      - href: journal.qmd
+        text: Journal
+      - href: about.qmd
+        text: About
+  page-footer:
+    left: "© 2026 Systematic Signals"
+    center: "For informational and educational purposes only. Not investment advice."
+    right: "Built with [Quarto](https://quarto.org)"
+
+format:
+  html:
+    theme:
+      light: [flatly, theme-light.scss]
+      dark: [darkly, theme-dark.scss]
+    css: styles.css
+    toc: false
+    page-layout: article
+    mainfont: "Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    include-in-header:
+      text: |
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+execute:
+  freeze: false     # pages re-read data/ on every build
+  echo: false       # show output only, never code
+  warning: false

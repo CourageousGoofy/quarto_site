@@ -1,0 +1,27 @@
+---
+title: "About"
+---
+
+This site publishes the latest output of three systematic strategies I run, together with their historical backtests:
+
+| Strategy | Asset class | Style | Rebalance |
+|---|---|---|---|
+| [Global Equity Rotation (DCA)](strategies/dca.qmd) | Country equity ETFs | Multi-factor long / short | Weekly |
+| [Gold Trend](strategies/gold.qmd) | Gold | Trend-following, long / flat | Daily |
+| [Bitcoin Trend](strategies/btc.qmd) | Bitcoin | Trend-following, long / flat | Daily |
+
+Each strategy page has three tabs:
+
+- **Latest signal:** the current position and the recent signal window from the latest production run.
+- **Backtest:** the historical simulation, with growth of $1, drawdowns, calendar-year returns and summary statistics.
+- **How it works:** a short description of the approach.
+
+## Notes on the numbers
+
+- **No look-ahead:** a position decided at the close of day *t* earns the return from *t* to *t + 1*.
+- **Costs:** gold and bitcoin results are shown **before** transaction costs. DCA results are **net** of trading costs.
+- **Simulated results:** backtests are hypothetical and were produced with the benefit of hindsight. Live results can differ because of costs, slippage, data revisions and model changes.
+
+## Disclaimer
+
+The content on this site reflects my personal opinions and is provided for informational and educational purposes only. Nothing here is investment, financial, tax or legal advice, or a recommendation to buy or sell any security. Signals come from automated models, may contain errors, and do not take any individual's circumstances into account. Past and simulated performance does not guarantee future results. I may hold positions in the instruments discussed. Do your own research and consult a licensed professional before making investment decisions.

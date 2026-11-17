@@ -1,0 +1,82 @@
+/* ---------- general ---------- */
+body { font-feature-settings: "tnum" 1; }
+.muted, .asof { color: var(--muted); }
+h2 { margin-top: 2rem; font-weight: 700; letter-spacing: -.01em; }
+h3 { font-weight: 600; }
+.panel-tabset .nav-link { font-weight: 600; }
+
+/* ---------- hero ---------- */
+.hero {
+  background: linear-gradient(135deg, var(--hero-a), var(--hero-b));
+  color: #f8fafc; border-radius: 1rem; padding: 2.2rem 2rem; margin: .5rem 0 1.75rem;
+}
+.hero h1 { color: #fff; font-weight: 700; font-size: 2rem; margin: 0 0 .4rem; letter-spacing: -.02em; }
+.hero p { color: #cbd5e1; margin: 0; max-width: 46rem; font-size: 1.05rem; }
+.hero .asof-pill { display: inline-block; margin-top: 1rem; padding: .25rem .7rem; border-radius: 999px;
+  background: rgba(255,255,255,.12); color: #e2e8f0; font-size: .82rem; }
+
+/* ---------- overview strategy cards ---------- */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1rem 0 1.5rem; }
+.card-s { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: .9rem; padding: 1.1rem 1.2rem;
+  display: flex; flex-direction: column; gap: .35rem; text-decoration: none !important; color: inherit !important;
+  transition: transform .12s ease, box-shadow .12s ease; }
+.card-s:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(15,23,42,.12); }
+.card-s .k { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.card-s .t { font-size: 1.1rem; font-weight: 700; }
+.card-s .pill { align-self: flex-start; font-weight: 700; font-size: .85rem; padding: .2rem .65rem; border-radius: 999px; }
+.card-s .d { font-size: .88rem; color: var(--muted); }
+.card-s .go { margin-top: auto; font-size: .85rem; font-weight: 600; color: var(--bs-primary); }
+.pill.long { background: rgba(22,163,74,.15); color: #16a34a; }
+.pill.flat { background: rgba(156,163,175,.18); color: #8b93a1; }
+.pill.partial { background: rgba(245,158,11,.16); color: #d97706; }
+.pill.ls { background: rgba(37,99,235,.14); color: #3b82f6; }
+
+/* ---------- signal card (strategy pages) ---------- */
+.signal-card { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;
+  border-radius: .9rem; padding: 1.1rem 1.4rem; margin: .5rem 0 1rem; border: 1px solid var(--card-border);
+  background: var(--card-bg); border-left-width: 6px; }
+.signal-card.long { border-left-color: #16a34a; }
+.signal-card.flat { border-left-color: #9ca3af; }
+.signal-card.partial { border-left-color: #f59e0b; }
+.sc-left, .sc-right { display: flex; flex-direction: column; }
+.sc-right { text-align: right; }
+.sc-label, .sc-right span { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.sc-state { font-size: 2rem; font-weight: 800; letter-spacing: -.02em; }
+.signal-card.long .sc-state { color: #16a34a; }
+.signal-card.flat .sc-state { color: #8b93a1; }
+.signal-card.partial .sc-state { color: #d97706; }
+.sc-right b { font-size: 1.1rem; }
+.sc-right .sc-detail { text-transform: none; letter-spacing: 0; font-size: .85rem; margin-top: .2rem; }
+
+/* ---------- stat tiles ---------- */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: .75rem; margin: .75rem 0 1.25rem; }
+.stat { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: .75rem; padding: .7rem .9rem; }
+.stat span { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.stat b { font-size: 1.35rem; font-weight: 700; }
+.stat.pos b { color: #16a34a; }
+.stat.neg b { color: #dc2626; }
+
+/* ---------- tables ---------- */
+.table-scroll { overflow-x: auto; margin-bottom: 1rem; }
+.signal-table, .perf-table { font-size: .88rem; margin: 0; }
+.signal-table th, .perf-table th { font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted);
+  font-weight: 600; border-bottom-width: 2px; white-space: nowrap; }
+.signal-table td, .perf-table td { white-space: nowrap; vertical-align: middle; }
+.factor-table td { text-align: right; }
+.factor-table td:nth-child(2), .factor-table td:nth-child(3) { text-align: left; }
+
+/* ---------- lists of positions ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: .4rem; margin: .3rem 0 .8rem; }
+.chip { padding: .2rem .65rem; border-radius: 999px; font-size: .85rem; font-weight: 600; }
+.chip.long { background: rgba(22,163,74,.14); color: #16a34a; }
+.chip.short { background: rgba(220,38,38,.12); color: #dc2626; }
+
+.legend-note { font-size: .82rem; color: var(--muted); margin-top: -.25rem; }
+.method { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: .9rem; padding: 1rem 1.25rem; }
+.method ul { margin-bottom: 0; }
+
+@media (max-width: 576px) {
+  .hero { padding: 1.5rem 1.2rem; }
+  .hero h1 { font-size: 1.55rem; }
+  .sc-right { text-align: left; }
+}

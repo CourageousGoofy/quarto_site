@@ -1,0 +1,71 @@
+---
+title: "Overview"
+title-block-style: none
+page-layout: article
+listing:
+  id: recent-posts
+  contents: posts
+  sort: "date desc"
+  type: grid
+  max-items: 3
+  categories: false
+  fields: [date, title, description]
+---
+
+```{python}
+from IPython.display import HTML, display
+from site_helpers import meta
+
+m = meta()
+b, g, d = m["btc"], m["gold"], m["dca"]
+asof = max(b["asof"], g["asof"], d["asof"])
+
+def pill(p):
+    if p >= 0.999: return '<span class="pill long">LONG</span>'
+    if p > 0:      return f'<span class="pill partial">PARTIAL {p:.0%}</span>'
+    return '<span class="pill flat">FLAT</span>'
+
+btc_regime = {"b": "Bullish", "bn": "Bullish-neutral", "n": "Neutral", "sn": "Bearish-neutral", "s": "Bearish"}[b["regime"]]
+
+display(HTML(f"""
+<div class="hero">
+  <h1>Systematic Signals</h1>
+  <p>Latest signals and backtest results for three rule-based strategies: a global equity country
+  rotation (DCA), a gold trend model and a bitcoin trend model.</p>
+  <span class="asof-pill">Signals as of {asof}</span>
+</div>
+
+<div class="cards">
+  <a class="card-s" href="strategies/dca.qmd">
+    <span class="k">Equities · long / short</span>
+    <span class="t">Global Equity Rotation (DCA)</span>
+    <span class="pill ls">{len(d['longs'])} LONG · {len(d['shorts'])} SHORT</span>
+    <span class="d">Top long: <b>{', '.join(d['longs'][:3])}</b><br>Top short: <b>{', '.join(d['shorts'][-3:][::-1])}</b></span>
+    <span class="go">Signals & backtest →</span>
+  </a>
+  <a class="card-s" href="strategies/gold.qmd">
+    <span class="k">Gold · long / flat</span>
+    <span class="t">Gold Trend</span>
+    {pill(g['position'])}
+    <span class="d">Gold {g['price']:,.0f} · regime: {g['regime'].replace('_', '-')}</span>
+    <span class="go">Signals & backtest →</span>
+  </a>
+  <a class="card-s" href="strategies/btc.qmd">
+    <span class="k">Crypto · long / flat</span>
+    <span class="t">Bitcoin Trend</span>
+    {pill(b['position'])}
+    <span class="d">BTC {b['price']:,.0f} · regime: {btc_regime}</span>
+    <span class="go">Signals & backtest →</span>
+  </a>
+</div>
+"""))
+```
+
+::: {.callout-note appearance="simple"}
+Signals come from systematic models and are updated after each production run. Backtests are hypothetical and are shown for research and educational purposes only. Nothing here is investment advice. See [About](about.qmd) for the full disclaimer.
+:::
+
+## From the journal
+
+::: {#recent-posts}
+:::

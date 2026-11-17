@@ -1,0 +1,107 @@
+﻿---
+title: "Global Equity Rotation (DCA)"
+subtitle: "Cross-country long / short ranking on value, quality, growth and momentum"
+---
+
+```{python}
+import sys; sys.path.insert(0, "..")
+from site_helpers import *
+
+m = meta()["dca"]
+sig = load_signals("dca")
+bt = load_backtest("dca")
+```
+
+::: {.panel-tabset}
+
+## Latest signal
+
+```{python}
+longs = sig[sig["pos"] == 1].sort_values("rank")
+shorts = sig[sig["pos"] == -1].sort_values("rank", ascending=False)
+chips = lambda df, cls: "".join(f'<span class="chip {cls}">{r.market} · {r.ticker}</span>' for r in df.itertuples())
+display(HTML(f"""
+<div class="signal-card long" style="border-left-color:#2563eb">
+  <div class="sc-left"><span class="sc-label">Portfolio</span>
+    <span class="sc-state" style="color:#3b82f6">{len(longs)} LONG · {len(shorts)} SHORT</span></div>
+  <div class="sc-right"><span>Signal date</span><b>{m['asof']}</b>
+    <span class="sc-detail">{len(sig)} country ETFs ranked</span></div>
+</div>
+<b>Long</b><div class="chips">{chips(longs, 'long')}</div>
+<b>Short</b><div class="chips">{chips(shorts, 'short')}</div>
+"""))
+```
+
+### Composite score ranking
+
+```{python}
+dca_score_chart(sig)
+```
+
+<p class="legend-note">Green = long, red = short, grey = no position. Hover over a bar for its rank.</p>
+
+### Factor scores
+
+```{python}
+dca_factor_table(sig)
+```
+
+<p class="legend-note">Scores are cross-sectional z-scores. Green cells are above average and red cells below; darker means further from average.</p>
+
+[Download the latest signal file (CSV)](../data/dca_signals.csv){download="dca_signals.csv"}
+
+## Backtest
+
+```{python}
+s, h, bm = bt["strategy"], bt["strategy_beta_hedged"], bt["benchmark"]
+st = perf_stats(s, 52)
+stat_tiles([
+    ("CAGR", pct(st["CAGR"]), "pos" if st["CAGR"] > 0 else "neg"),
+    ("Volatility", pct(st["Volatility"], False), ""),
+    ("Sharpe", f'{st["Sharpe"]:.2f}', ""),
+    ("Max drawdown", pct(st["Max drawdown"], False), "neg"),
+    ("Calmar", f'{st["Calmar"]:.2f}', ""),
+])
+```
+
+<p class="asof">Weekly, `{python} f"{bt.index[1]:%b %Y}"` to `{python} f"{bt.index[-1]:%b %Y}"`. Net of trading costs. The portfolio is equal-weight long / short and dollar-neutral. The equity benchmark (EQWL, equal-weight large caps) is hidden on the chart by default; click its legend entry to show it.</p>
+
+### Growth of $1
+
+```{python}
+equity_chart({
+    "Strategy": (s, C_STRAT, {}),
+    "Strategy, beta-hedged": (h, C_ALT, {"width": 1.6}),
+    "Equity benchmark (EQWL)": (bm, C_BENCH, {"dash": "dot", "width": 1.5, "visible": "legendonly"}),
+}, ylog=False)
+```
+
+### Drawdowns
+
+```{python}
+drawdown_chart({"Strategy": (s, C_STRAT), "Strategy, beta-hedged": (h, C_ALT)})
+```
+
+### Calendar-year returns
+
+```{python}
+annual_returns_chart({"Strategy": (s, C_STRAT), "Strategy, beta-hedged": (h, C_ALT), "Equity benchmark (EQWL)": (bm, C_BENCH)})
+```
+
+### Summary statistics
+
+```{python}
+perf_table({"Strategy": s, "Strategy, beta-hedged": h, "Equity benchmark (EQWL)": bm}, 52)
+```
+
+## How it works
+
+::: {.method}
+- **Universe:** 30 country and regional equity ETFs across developed and emerging markets.
+- **Factors:** each market is scored on **value** (valuation yields), **quality** (profitability and balance-sheet strength), **growth** (earnings and sales growth) and **momentum** (price trend). Every factor is standardised against the market's own history and then across markets.
+- **Portfolio:** markets are ranked on the average of the factor scores. The strategy goes long the top-ranked markets and short the bottom-ranked, with equal weights on each side.
+- **Rebalance:** weekly.
+- **Beta-hedged variant:** an overlay that offsets the portfolio's estimated equity-market beta.
+:::
+
+:::
