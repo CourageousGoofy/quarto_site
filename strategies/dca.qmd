@@ -1,5 +1,5 @@
 ﻿---
-title: "Global Equity Rotation (DCA)"
+title: "Global Equity Rotation"
 subtitle: "Cross-country long / short ranking on value, quality, growth and momentum"
 ---
 
@@ -66,7 +66,7 @@ stat_tiles([
 
 <p class="asof">Weekly, `{python} f"{bt.index[1]:%b %Y}"` to `{python} f"{bt.index[-1]:%b %Y}"`. Net of trading costs. The portfolio is equal-weight long / short and dollar-neutral. The equity benchmark (EQWL, equal-weight large caps) is hidden on the chart by default; click its legend entry to show it.</p>
 
-### Growth of $1
+### Growth of $1,000
 
 ```{python}
 equity_chart({
@@ -75,6 +75,8 @@ equity_chart({
     "Equity benchmark (EQWL)": (bm, C_BENCH, {"dash": "dot", "width": 1.5, "visible": "legendonly"}),
 }, ylog=False)
 ```
+
+<p class="legend-note">Choose 1Y, 3Y or 5Y to restart every line at $1,000 at the beginning of that window.</p>
 
 ### Drawdowns
 

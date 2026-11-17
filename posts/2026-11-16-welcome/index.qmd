@@ -7,7 +7,7 @@ categories: [meta, process]
 
 This site tracks three systematic strategies:
 
-- **[Global Equity Rotation (DCA)](../../strategies/dca.qmd):** ranks 30 country ETFs each week on value, quality, growth and momentum, then goes long the leaders and short the laggards.
+- **[Global Equity Rotation](../../strategies/dca.qmd):** ranks 30 country ETFs each week on value, quality, growth and momentum, then goes long the leaders and short the laggards.
 - **[Gold Trend](../../strategies/gold.qmd):** a long / flat trend model on gold that switches to a faster horizon when prices become stretched.
 - **[Bitcoin Trend](../../strategies/btc.qmd):** a long / flat regime and trend model on BTC/USD.
 

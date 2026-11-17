@@ -2,7 +2,7 @@
 
 A Quarto website that publishes the latest signals and backtest results for three systematic strategies:
 
-- **Global Equity Rotation (DCA):** weekly multi-factor long / short across 30 country ETFs
+- **Global Equity Rotation:** weekly multi-factor long / short across 30 country ETFs
 - **Gold Trend:** daily long / flat trend model on gold
 - **Bitcoin Trend:** daily long / flat trend model on BTC/USD
 

@@ -58,11 +58,13 @@ stat_tiles([
 
 <p class="asof">Daily, `{python} f"{bt.index[0]:%b %Y}"` to `{python} f"{bt.index[-1]:%b %Y}"`, on spot gold (XAU/USD). Before transaction costs. The benchmark is buy-and-hold gold.</p>
 
-### Growth of $1
+### Growth of $1,000
 
 ```{python}
 equity_chart({"Strategy": (s, C_STRAT, {}), "Buy & hold gold": (bm, C_BENCH, {"dash": "dot", "width": 1.5})})
 ```
+
+<p class="legend-note">Choose 1Y, 3Y or 5Y to restart every line at $1,000 at the beginning of that window.</p>
 
 ### Drawdowns
 

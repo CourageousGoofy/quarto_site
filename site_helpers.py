@@ -94,21 +94,55 @@ def _show(fig):
     fig.show(config={"displayModeBar": False, "responsive": True})
 
 
+START_VALUE = 1000
+WINDOWS = [("1Y", 1), ("3Y", 3), ("5Y", 5), ("All", None)]
+
+
+def _rebased(s: pd.Series, years: int | None) -> pd.Series:
+    """Slice the last `years` of the series and rebase so the window starts at START_VALUE."""
+    s = s.dropna()
+    if years is not None:
+        s = s[s.index >= s.index[-1] - pd.DateOffset(years=years)]
+    return s / s.iloc[0] * START_VALUE
+
+
 def equity_chart(eqs: dict[str, tuple[pd.Series, str, dict]], ylog=True, height=400):
-    """eqs: name -> (series, color, extra trace kwargs)."""
+    """Growth of $1,000. The 1Y / 3Y / 5Y / All buttons re-slice the data and restart every line at $1,000.
+
+    eqs: name -> (series, color, extra trace kwargs). ylog applies to the full-history view;
+    the shorter windows use a linear axis, which reads better over a few years.
+    """
     fig = go.Figure()
+    names = list(eqs)
     for name, (s, color, kw) in eqs.items():
-        fig.add_scatter(x=s.index, y=s.values, name=name, line=dict(color=color, width=kw.pop("width", 2),
-                        dash=kw.pop("dash", None)), hovertemplate="%{y:.2f}", **kw)
-    _layout(fig, height, yfmt=".2~f" if not ylog else None, ylog=ylog)
-    fig.update_yaxes(title_text="Growth of $1" + (" (log)" if ylog else ""))
-    fig.update_xaxes(rangeselector=dict(
-        buttons=[dict(count=1, label="1Y", step="year", stepmode="backward"),
-                 dict(count=3, label="3Y", step="year", stepmode="backward"),
-                 dict(count=5, label="5Y", step="year", stepmode="backward"),
-                 dict(step="all", label="All")],
-        bgcolor="rgba(139,147,161,0.12)", activecolor="rgba(37,99,235,0.35)", font=dict(color=AXIS),
-        x=1, xanchor="right", y=1.0, yanchor="bottom"))
+        kw = dict(kw)
+        r = _rebased(s, None)
+        fig.add_scatter(x=r.index, y=r.values, name=name, line=dict(color=color, width=kw.pop("width", 2),
+                        dash=kw.pop("dash", None)), hovertemplate="$%{y:,.0f}", **kw)
+
+    buttons = []
+    for label, years in WINDOWS:
+        xs, ys = [], []
+        for name in names:
+            r = _rebased(eqs[name][0], years)
+            xs.append(r.index.strftime("%Y-%m-%d").tolist())
+            ys.append([round(v, 2) for v in r.values.tolist()])
+        log = ylog and years is None
+        buttons.append(dict(label=label, method="update",
+                            args=[{"x": xs, "y": ys},
+                                  {"xaxis.autorange": True, "yaxis.autorange": True,
+                                   "yaxis.type": "log" if log else "linear",
+                                   "yaxis.title.text": f"Growth of ${START_VALUE:,}" + (" (log)" if log else "")}]))
+
+    _layout(fig, height, ylog=ylog)
+    fig.update_yaxes(title_text=f"Growth of ${START_VALUE:,}" + (" (log)" if ylog else ""), tickformat="$,.0f")
+    fig.update_layout(
+        margin=dict(l=8, r=8, t=56, b=8),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
+        updatemenus=[dict(type="buttons", direction="left", buttons=buttons, active=len(WINDOWS) - 1,
+                          showactive=True, x=1, xanchor="right", y=1.13, yanchor="bottom",
+                          pad=dict(r=0, t=0), bgcolor="rgba(139,147,161,0.12)", bordercolor=GRID,
+                          font=dict(color=AXIS, size=11))])
     _show(fig)
 
 

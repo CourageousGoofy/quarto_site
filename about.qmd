@@ -6,14 +6,14 @@ This site publishes the latest output of three systematic strategies I run, toge
 
 | Strategy | Asset class | Style | Rebalance |
 |---|---|---|---|
-| [Global Equity Rotation (DCA)](strategies/dca.qmd) | Country equity ETFs | Multi-factor long / short | Weekly |
+| [Global Equity Rotation](strategies/dca.qmd) | Country equity ETFs | Multi-factor long / short | Weekly |
 | [Gold Trend](strategies/gold.qmd) | Gold | Trend-following, long / flat | Daily |
 | [Bitcoin Trend](strategies/btc.qmd) | Bitcoin | Trend-following, long / flat | Daily |
 
 Each strategy page has three tabs:
 
 - **Latest signal:** the current position and the recent signal window from the latest production run.
-- **Backtest:** the historical simulation, with growth of $1, drawdowns, calendar-year returns and summary statistics.
+- **Backtest:** the historical simulation, with growth of $1,000, drawdowns, calendar-year returns and summary statistics.
 - **How it works:** a short description of the approach.
 
 ## Notes on the numbers

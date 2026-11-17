@@ -31,14 +31,14 @@ display(HTML(f"""
 <div class="hero">
   <h1>Systematic Signals</h1>
   <p>Latest signals and backtest results for three rule-based strategies: a global equity country
-  rotation (DCA), a gold trend model and a bitcoin trend model.</p>
+  rotation, a gold trend model and a bitcoin trend model.</p>
   <span class="asof-pill">Signals as of {asof}</span>
 </div>
 
 <div class="cards">
   <a class="card-s" href="strategies/dca.qmd">
     <span class="k">Equities · long / short</span>
-    <span class="t">Global Equity Rotation (DCA)</span>
+    <span class="t">Global Equity Rotation</span>
     <span class="pill ls">{len(d['longs'])} LONG · {len(d['shorts'])} SHORT</span>
     <span class="d">Top long: <b>{', '.join(d['longs'][:3])}</b><br>Top short: <b>{', '.join(d['shorts'][-3:][::-1])}</b></span>
     <span class="go">Signals & backtest →</span>
