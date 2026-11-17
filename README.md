@@ -28,7 +28,7 @@ data/                  published outputs (latest signal files, backtest series, 
 | `btc_signals.csv`, `gold_signals.csv` | rows from the latest production signal file |
 | `dca_signals.csv` | latest country ranking with factor scores and positions |
 | `btc_backtest.csv`, `gold_backtest.csv` | daily growth of $1: strategy vs buy-and-hold |
-| `dca_backtest_weekly_returns.csv` | weekly returns: strategy, beta-hedged strategy, benchmark |
+| `dca_backtest_weekly_returns.csv` | weekly net returns of the strategy |
 
 ## Update the site
 

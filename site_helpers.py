@@ -242,13 +242,16 @@ def recent_signal_table(df: pd.DataFrame, regime_map: dict | None = None, extra_
 
 
 def dca_score_chart(df: pd.DataFrame, height=720):
-    d = df.sort_values("total_score")
+    d = df.sort_values(["total_score", "rank"], ascending=[True, False])
+    no_hold = d["no_hold"].astype(bool) if "no_hold" in d else pd.Series(False, index=d.index)
     colors = [C_LONG if p == 1 else C_SHORT if p == -1 else C_FLAT for p in d["pos"]]
     labels = {1: "Long", -1: "Short", 0: "No position"}
-    names = [f"{mk}  ({tk})" for mk, tk in zip(d["market"], d["ticker"])]
+    status = ["No-hold list (ranked, not held)" if nh else labels[int(p)] for p, nh in zip(d["pos"], no_hold)]
+    names = [f"{mk}  ({tk})" + (" ⊘" if nh else "") for mk, tk, nh in zip(d["market"], d["ticker"], no_hold)]
     fig = go.Figure(go.Bar(
         x=d["total_score"].astype(float).tolist(), y=names, orientation="h", marker_color=colors,
-        customdata=[[labels[int(p)], float(r)] for p, r in zip(d["pos"], d["rank"])],
+        marker_pattern_shape=["/" if nh else "" for nh in no_hold],
+        customdata=[[s, float(r)] for s, r in zip(status, d["rank"])],
         hovertemplate="<b>%{y}</b><br>Total score %{x:.2f}<br>Rank %{customdata[1]:.0f} · %{customdata[0]}<extra></extra>"))
     _layout(fig, height, legend=False)
     fig.update_layout(hovermode="closest", margin=dict(l=8, r=8, t=10, b=8))
@@ -257,10 +260,13 @@ def dca_score_chart(df: pd.DataFrame, height=720):
 
 
 def dca_factor_table(df: pd.DataFrame):
-    t = df.sort_values("rank")[["rank", "market", "ticker", "pos", "value", "quality", "growth", "momentum", "total_score"]]
+    t = df.sort_values("rank").copy()
+    if "no_hold" in t:
+        t.loc[t["no_hold"].astype(bool), "pos"] = 9          # display code for "no-hold"
+    t = t[["rank", "market", "ticker", "pos", "value", "quality", "growth", "momentum", "total_score"]]
     t = t.rename(columns={"rank": "Rank", "market": "Market", "ticker": "ETF", "pos": "Signal", "value": "Value",
                           "quality": "Quality", "growth": "Growth", "momentum": "Momentum", "total_score": "Total"})
-    lab = {1: "LONG", -1: "SHORT", 0: "–"}
+    lab = {1: "LONG", -1: "SHORT", 0: "–", 9: "NO-HOLD"}
 
     def heat(v):
         if pd.isna(v):

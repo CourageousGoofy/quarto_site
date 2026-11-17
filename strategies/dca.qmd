@@ -38,7 +38,7 @@ display(HTML(f"""
 dca_score_chart(sig)
 ```
 
-<p class="legend-note">Green = long, red = short, grey = no position. Hover over a bar for its rank.</p>
+<p class="legend-note">Green = long, red = short, grey = no position. Hatched bars marked ⊘ are on the no-hold list: they are ranked but never held, and the next eligible market takes their place. Hover over a bar for its rank.</p>
 
 ### Factor scores
 
@@ -53,7 +53,7 @@ dca_factor_table(sig)
 ## Backtest
 
 ```{python}
-s, h, bm = bt["strategy"], bt["strategy_beta_hedged"], bt["benchmark"]
+s = bt["strategy"]
 st = perf_stats(s, 52)
 stat_tiles([
     ("CAGR", pct(st["CAGR"]), "pos" if st["CAGR"] > 0 else "neg"),
@@ -64,36 +64,32 @@ stat_tiles([
 ])
 ```
 
-<p class="asof">Weekly, `{python} f"{bt.index[1]:%b %Y}"` to `{python} f"{bt.index[-1]:%b %Y}"`. Net of trading costs. The portfolio is equal-weight long / short and dollar-neutral. The equity benchmark (EQWL, equal-weight large caps) is hidden on the chart by default; click its legend entry to show it.</p>
+<p class="asof">Weekly, `{python} f"{bt.index[1]:%b %Y}"` to `{python} f"{bt.index[-1]:%b %Y}"`. Net of trading and short-borrow costs. Equal-weight, dollar-neutral long / short, six markets per side, with the no-hold list applied throughout.</p>
 
 ### Growth of $1,000
 
 ```{python}
-equity_chart({
-    "Strategy": (s, C_STRAT, {}),
-    "Strategy, beta-hedged": (h, C_ALT, {"width": 1.6}),
-    "Equity benchmark (EQWL)": (bm, C_BENCH, {"dash": "dot", "width": 1.5, "visible": "legendonly"}),
-}, ylog=False)
+equity_chart({"Strategy": (s, C_STRAT, {})}, ylog=False)
 ```
 
-<p class="legend-note">Choose 1Y, 3Y or 5Y to restart every line at $1,000 at the beginning of that window.</p>
+<p class="legend-note">Choose 1Y, 3Y or 5Y to restart the line at $1,000 at the beginning of that window.</p>
 
 ### Drawdowns
 
 ```{python}
-drawdown_chart({"Strategy": (s, C_STRAT), "Strategy, beta-hedged": (h, C_ALT)})
+drawdown_chart({"Strategy": (s, C_STRAT)})
 ```
 
 ### Calendar-year returns
 
 ```{python}
-annual_returns_chart({"Strategy": (s, C_STRAT), "Strategy, beta-hedged": (h, C_ALT), "Equity benchmark (EQWL)": (bm, C_BENCH)})
+annual_returns_chart({"Strategy": (s, C_STRAT)})
 ```
 
 ### Summary statistics
 
 ```{python}
-perf_table({"Strategy": s, "Strategy, beta-hedged": h, "Equity benchmark (EQWL)": bm}, 52)
+perf_table({"Strategy": s}, 52)
 ```
 
 ## How it works
@@ -102,8 +98,8 @@ perf_table({"Strategy": s, "Strategy, beta-hedged": h, "Equity benchmark (EQWL)"
 - **Universe:** 30 country and regional equity ETFs across developed and emerging markets.
 - **Factors:** each market is scored on **value** (valuation yields), **quality** (profitability and balance-sheet strength), **growth** (earnings and sales growth) and **momentum** (price trend). Every factor is standardised against the market's own history and then across markets.
 - **Portfolio:** markets are ranked on the average of the factor scores. The strategy goes long the top-ranked markets and short the bottom-ranked, with equal weights on each side.
+- **No-hold list:** a few markets can be ranked but excluded from holdings (currently Indonesia). The next eligible market fills the slot, so each side always holds six.
 - **Rebalance:** weekly.
-- **Beta-hedged variant:** an overlay that offsets the portfolio's estimated equity-market beta.
 :::
 
 :::

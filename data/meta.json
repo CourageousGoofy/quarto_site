@@ -19,11 +19,11 @@
     "asof": "2026-11-12",
     "longs": [
       "Korea",
-      "Indonesia",
       "Thailand",
       "South Africa",
       "Taiwan",
-      "US - SP500"
+      "US - SP500",
+      "China"
     ],
     "shorts": [
       "Switzerland",
@@ -33,6 +33,6 @@
       "US - R2000",
       "Italy"
     ],
-    "backtest_end": "2026-11-01"
+    "backtest_end": "2026-11-15"
   }
 }
