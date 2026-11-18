@@ -1,17 +1,17 @@
 {
   "generated": "2026-11-17",
   "btc": {
-    "asof": "2026-11-12",
+    "asof": "2026-11-17",
     "position": 0.0,
     "regime": "n",
-    "price": 71477.04,
+    "price": 64288.45,
     "backtest_exposure": 0.424
   },
   "gold": {
-    "asof": "2026-11-12",
+    "asof": "2026-11-17",
     "position": 0.0,
     "regime": "neutral",
-    "price": 3877.07,
+    "price": 3849.63,
     "fast_mode": 0,
     "backtest_exposure": 0.582
   },
