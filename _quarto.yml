@@ -5,8 +5,8 @@ project:
     - data/*.csv
 
 website:
-  title: "Alpine Quantamental Investment"
-  description: "Latest signals and backtest results for three systematic strategies: global equity country rotation, gold and bitcoin."
+  title: "AQI"
+  description: "Alpine Quantamental Investment (AQI): latest signals and backtest results for systematic strategies in global equities, gold and bitcoin."
   site-url: "https://CourageousGoofy.github.io/quarto_site"
   favicon: assets/favicon.svg
   page-navigation: true

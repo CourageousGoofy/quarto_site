@@ -30,8 +30,9 @@ btc_regime = {"b": "Bullish", "bn": "Bullish-neutral", "n": "Neutral", "sn": "Be
 display(HTML(f"""
 <div class="hero">
   <h1>Alpine Quantamental Investment</h1>
-  <p>Latest signals and backtest results for market-neutral rule-based strategies: global country
-  rotation, gold trend and bitcoin trend.</p>
+  <p>Alpine Quantamental Investment is a systematic macro investment platform that pursues market-neutral
+  strategies across global asset classes. Our process combines quantitative signal research with fundamental
+  macroeconomic analysis to generate returns uncorrelated with broader market direction.</p>
   <span class="asof-pill">Signals as of {asof}</span>
 </div>
 
