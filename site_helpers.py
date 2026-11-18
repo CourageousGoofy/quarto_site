@@ -94,7 +94,7 @@ def _show(fig):
     fig.show(config={"displayModeBar": False, "responsive": True})
 
 
-START_VALUE = 1000
+START_VALUE = 100_000
 WINDOWS = [("1Y", 1), ("3Y", 3), ("5Y", 5), ("All", None)]
 
 
@@ -107,7 +107,7 @@ def _rebased(s: pd.Series, years: int | None) -> pd.Series:
 
 
 def equity_chart(eqs: dict[str, tuple[pd.Series, str, dict]], ylog=True, height=400):
-    """Growth of $1,000. The 1Y / 3Y / 5Y / All buttons re-slice the data and restart every line at $1,000.
+    """Growth of $100,000. The 1Y / 3Y / 5Y / All buttons re-slice the data and restart every line at $100,000.
 
     eqs: name -> (series, color, extra trace kwargs). ylog applies to the full-history view;
     the shorter windows use a linear axis, which reads better over a few years.

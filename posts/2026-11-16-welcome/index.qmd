@@ -5,12 +5,10 @@ date: 2026-11-16
 categories: [meta, process]
 ---
 
-This site tracks three systematic strategies:
+This site tracks AQI systematic strategies:
 
 - **[Global Equity Rotation](../../strategies/dca.qmd):** ranks 30 country ETFs each week on value, quality, growth and momentum, then goes long the leaders and short the laggards.
 - **[Gold Trend](../../strategies/gold.qmd):** a long / flat trend model on gold that switches to a faster horizon when prices become stretched.
 - **[Bitcoin Trend](../../strategies/btc.qmd):** a long / flat regime and trend model on BTC/USD.
 
 Every strategy page opens on the **latest signal**: the current position, a chart of the recent signal window and a table of recent signal changes. The **Backtest** tab shows the long-run simulated record.
-
-I'll use the journal for notes on signal changes, market context and model research.
