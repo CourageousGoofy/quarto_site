@@ -56,7 +56,7 @@ stat_tiles([
 ])
 ```
 
-<p class="asof">Daily, `{python} f"{bt.index[0]:%b %Y}"` to `{python} f"{bt.index[-1]:%b %Y}"`. Before transaction costs. The benchmark is buy-and-hold BTC.</p>
+<p class="asof">Daily, `{python} f"{bt.index[0]:%b %Y}"` to `{python} f"{bt.index[-1]:%b %Y}"`. Before transaction costs. When the strategy is flat (or partly invested) the cash earns the overnight fed funds rate (rate × days / 365). The benchmark is buy-and-hold BTC.</p>
 
 ### Growth of $1,000
 
