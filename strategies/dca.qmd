@@ -96,8 +96,8 @@ perf_table({"Strategy": s}, 52)
 
 ::: {.method}
 - **Universe:** 30 country and regional equity ETFs across developed and emerging markets.
-- **Factors:** each market is scored on **value** (valuation yields), **quality** (profitability and balance-sheet strength), **growth** (earnings and sales growth) and **momentum** (price trend). Every factor is standardised against the market's own history and then across markets.
-- **Portfolio:** markets are ranked on the average of the factor scores. The strategy goes long the top-ranked markets and short the bottom-ranked, with equal weights on each side.
+- **Factors:** each market is scored on **value**, **quality**, **growth** and **momentum**. 
+- **Portfolio:** the strategy goes long the top-ranked markets and short the bottom-ranked, with equal weights on each side.
 - **No-hold list:** a few markets can be ranked but excluded from holdings (currently Indonesia). The next eligible market fills the slot, so each side always holds six.
 - **Rebalance:** weekly.
 :::

@@ -20,6 +20,7 @@ Each strategy page has three tabs:
 
 - **No look-ahead:** a position decided at the close of day *t* earns the return from *t* to *t + 1*.
 - **Costs:** gold and bitcoin results are shown **before** transaction costs. DCA results are **net** of trading costs.
+- **Cash:** when the gold strategy is flat, its cash earns the overnight fed funds rate (rate × days held / 365).
 - **Simulated results:** backtests are hypothetical and were produced with the benefit of hindsight. Live results can differ because of costs, slippage, data revisions and model changes.
 
 ## Disclaimer

@@ -56,7 +56,7 @@ stat_tiles([
 ])
 ```
 
-<p class="asof">Daily, `{python} f"{bt.index[0]:%b %Y}"` to `{python} f"{bt.index[-1]:%b %Y}"`, on spot gold (XAU/USD). Before transaction costs. The benchmark is buy-and-hold gold.</p>
+<p class="asof">Daily, `{python} f"{bt.index[0]:%b %Y}"` to `{python} f"{bt.index[-1]:%b %Y}"`, on spot gold (XAU/USD). Before transaction costs. When the strategy is flat it holds cash, which earns the overnight fed funds rate (rate × days / 365). The benchmark is buy-and-hold gold.</p>
 
 ### Growth of $1,000
 
