@@ -1,38 +1,38 @@
 {
-  "generated": "2026-11-17",
+  "generated": "2026-11-19",
   "btc": {
-    "asof": "2026-11-17",
+    "asof": "2026-11-19",
     "position": 0.0,
     "regime": "n",
-    "price": 64288.45,
+    "price": 61490.79,
     "backtest_exposure": 0.424
   },
   "gold": {
-    "asof": "2026-11-17",
+    "asof": "2026-11-19",
     "position": 0.0,
     "regime": "neutral",
-    "price": 3849.63,
-    "fast_mode": 0,
-    "backtest_exposure": 0.582
+    "price": 3625.47,
+    "fast_mode": 1,
+    "backtest_exposure": 0.581
   },
   "dca": {
-    "asof": "2026-11-12",
+    "asof": "2026-11-19",
     "longs": [
       "Korea",
-      "Thailand",
-      "South Africa",
-      "Taiwan",
+      "China",
       "US - SP500",
-      "China"
+      "South Africa",
+      "Netherlands",
+      "Thailand"
     ],
     "shorts": [
       "Switzerland",
-      "Germany",
-      "Singapore",
-      "Australia",
+      "France",
+      "Italy",
       "US - R2000",
-      "Italy"
+      "India",
+      "Australia"
     ],
-    "backtest_end": "2026-11-17"
+    "backtest_end": "2026-11-19"
   }
 }
