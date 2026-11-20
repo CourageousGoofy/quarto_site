@@ -1,0 +1,35 @@
+---
+title: "Rethinking S&P 500 Multiples"
+description: "The AI boom is real, but a growing share of its value isn't reaching S&P 500 holders."
+date: 2026-11-19
+categories: [equities, valuation, AI]
+---
+
+The AI boom is real, but a growing share of its value isn't reaching S&P 500 holders.
+
+## 1. Where the money goes
+
+- **Acquisitions at hype prices.** For example, AMD agreed to pay $8.2B in stock for Fei-Fei Li's World Labs, a two-year-old startup with little revenue. That moves value from public shareholders into private pockets. The price tag, albeit paid in stock, is itself a sign of hype.
+- **An offshore supply chain.** Much of the cash goes to chip and equipment makers outside the U.S., like TSMC, Samsung, SK Hynix and ASML. S&P holders don't own them.
+
+**→ Action:** Add EWT (Taiwan), EWY (South Korea) and EWN (Netherlands) to bring the places the money actually goes into the portfolio.
+
+## 2. Timing flatters earnings
+
+Suppliers (Nvidia) book AI revenue right away, while buyers (Alphabet) spread the cost over years as depreciation. Earnings look strong today partly because the bill hasn't come due. As depreciation builds up, I expect earnings to weaken, so I'm skeptical of headlines about "record earnings."
+
+**→ Action:** Judge the market by free cash flow, not earnings. A reasonable entry point is a forward 12-month P/FCF below its 5-year average (roughly 25x), which is about 7% below the current price.
+
+## 3. Multiples should compress
+
+The Mag 7 are turning from asset-light into asset-heavy businesses, and cyclical suppliers now make up more of the index. Thinner margins plus more cyclicality usually mean lower multiples, and a cap-weighted index takes the biggest hit.
+
+**→ Action:** Lean away from cap weighting. Shift from OEF to EQWL, plus selected sector ETFs. Historically this has cost little: since EQWL launched in 2006, both funds have returned roughly 11% a year.
+
+## When to buy the dip
+
+Expecting the multiple to shrink is a reason to be patient, not to sell everything. I'd add to OEF if it falls another 7% from here, or if it drops to –5% year-to-date.
+
+---
+
+*This reflects my personal views and is not investment advice.*
