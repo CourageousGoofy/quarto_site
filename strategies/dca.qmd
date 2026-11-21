@@ -54,14 +54,7 @@ dca_factor_table(sig)
 
 ```{python}
 s = bt["strategy"]
-st = perf_stats(s, 52)
-stat_tiles([
-    ("CAGR", pct(st["CAGR"]), "pos" if st["CAGR"] > 0 else "neg"),
-    ("Volatility", pct(st["Volatility"], False), ""),
-    ("Sharpe", f'{st["Sharpe"]:.2f}', ""),
-    ("Max drawdown", pct(st["Max drawdown"], False), "neg"),
-    ("Calmar", f'{st["Calmar"]:.2f}', ""),
-])
+horizon_stat_tiles(s, 52, metrics=("CAGR", "Volatility", "Sharpe", "Max drawdown", "Calmar"))
 ```
 
 <p class="asof">Weekly, `{python} f"{bt.index[1]:%b %Y}"` to `{python} f"{bt.index[-1]:%b %Y}"`. Net of trading and short-borrow costs. Equal-weight, dollar-neutral long / short, six markets per side, with the no-hold list applied throughout.</p>
@@ -72,7 +65,7 @@ stat_tiles([
 equity_chart({"Strategy": (s, C_STRAT, {})}, ylog=False)
 ```
 
-<p class="legend-note">Choose 1Y, 3Y or 5Y to restart the line at $100,000 at the beginning of that window.</p>
+<p class="legend-note">Choose YTD, 1Y, 3Y or 5Y to restart the line at $100,000 at the beginning of that window. The statistics above switch to the same window.</p>
 
 ### Drawdowns
 

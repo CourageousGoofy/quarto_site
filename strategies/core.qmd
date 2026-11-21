@@ -54,15 +54,7 @@ display(HTML(f'<div class="cards cards-2x2">{"".join(cards)}</div>'))
 ## Performance
 
 ```{python}
-st = perf_stats(p, 252)
-st_core = perf_stats(core, 252)
-stat_tiles([
-    ("CAGR", pct(st["CAGR"]), "pos" if st["CAGR"] > 0 else "neg"),
-    ("Volatility", pct(st["Volatility"], False), ""),
-    ("Sharpe", f'{st["Sharpe"]:.2f}', ""),
-    ("Max drawdown", pct(st["Max drawdown"], False), "neg"),
-    ("vs passive core", f'{st["CAGR"] - st_core["CAGR"]:+.1%} / yr', "pos" if st["CAGR"] > st_core["CAGR"] else "neg"),
-])
+horizon_stat_tiles(p, 252, compare=("passive core", core))
 ```
 
 <p class="asof">Daily, `{python} f"{p.index[0]:%b %Y}"` to `{python} f"{p.index[-1]:%b %Y}"`. Hypothetical backtest, after estimated transaction costs and financing costs. The comparison line is the passive core on its own, at 100% of capital.</p>
@@ -74,7 +66,7 @@ equity_chart({"Core Portfolio": (p, C_STRAT, {}),
               "Passive core": (core, C_BENCH, {"dash": "dot", "width": 1.5})})
 ```
 
-<p class="legend-note">Choose 1Y, 3Y or 5Y to restart every line at $100,000 at the beginning of that window. The overlays join in stages, so the gap between the lines widens over time.</p>
+<p class="legend-note">Choose YTD, 1Y, 3Y or 5Y to restart every line at $100,000 at the beginning of that window. The statistics above switch to the same window. The overlays join in stages, so the gap between the lines widens over time.</p>
 
 ### Drawdowns
 

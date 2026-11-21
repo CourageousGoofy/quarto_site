@@ -47,13 +47,7 @@ recent_signal_table(sig, regime_map=BTC_REGIMES)
 ```{python}
 s, bm = bt["strategy"], bt["benchmark"]
 st, sb = perf_stats(s, 252), perf_stats(bm, 252)
-stat_tiles([
-    ("CAGR", pct(st["CAGR"]), "pos" if st["CAGR"] > 0 else "neg"),
-    ("Volatility", pct(st["Volatility"], False), ""),
-    ("Sharpe", f'{st["Sharpe"]:.2f}', ""),
-    ("Max drawdown", pct(st["Max drawdown"], False), "neg"),
-    ("Time in market", f'{meta()["btc"]["backtest_exposure"]:.0%}', ""),
-])
+horizon_stat_tiles(s, 252, static=[("Time in market (full history)", f'{meta()["btc"]["backtest_exposure"]:.0%}', "")])
 ```
 
 <p class="asof">Daily, `{python} f"{bt.index[0]:%b %Y}"` to `{python} f"{bt.index[-1]:%b %Y}"`. Before transaction costs. When the strategy is flat (or partly invested) the cash earns the overnight fed funds rate (rate × days / 365). The benchmark is buy-and-hold BTC.</p>
@@ -64,7 +58,7 @@ stat_tiles([
 equity_chart({"Strategy": (s, C_STRAT, {}), "Buy & hold BTC": (bm, C_BENCH, {"dash": "dot", "width": 1.5})})
 ```
 
-<p class="legend-note">Choose 1Y, 3Y or 5Y to restart every line at $100,000 at the beginning of that window.</p>
+<p class="legend-note">Choose YTD, 1Y, 3Y or 5Y to restart every line at $100,000 at the beginning of that window. The statistics above switch to the same window.</p>
 
 ### Drawdowns
 

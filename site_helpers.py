@@ -48,7 +48,7 @@ def load_backtest(name: str) -> pd.DataFrame:
 def perf_stats(eq: pd.Series, periods: int) -> dict:
     r = eq.pct_change().dropna()
     years = (eq.index[-1] - eq.index[0]).days / 365.25
-    cagr = eq.iloc[-1] ** (1 / years) - 1
+    cagr = (eq.iloc[-1] / eq.iloc[0]) ** (1 / years) - 1     # works for any slice, not only from inception
     vol = r.std() * np.sqrt(periods)
     mdd = (eq / eq.cummax() - 1).min()
     return {"CAGR": cagr, "Volatility": vol, "Sharpe": (r.mean() * periods) / vol if vol else np.nan,
@@ -95,19 +95,99 @@ def _show(fig):
 
 
 START_VALUE = 100_000
-WINDOWS = [("1Y", 1), ("3Y", 3), ("5Y", 5), ("All", None)]
+WINDOWS = [("YTD", "ytd"), ("1Y", 1), ("3Y", 3), ("5Y", 5), ("All", None)]
+WINDOW_NAMES = {"ytd": "year to date", 1: "the last year", 3: "the last 3 years", 5: "the last 5 years",
+                None: "the full history"}
 
 
-def _rebased(s: pd.Series, years: int | None) -> pd.Series:
-    """Slice the last `years` of the series and rebase so the window starts at START_VALUE."""
+def window_slice(s: pd.Series, years) -> pd.Series:
+    """Equity curve over a horizon, starting at the close that anchors it: the last close before the
+    window (the prior year-end for YTD), so the first-to-last ratio is the window's return."""
     s = s.dropna()
-    if years is not None:
-        s = s[s.index >= s.index[-1] - pd.DateOffset(years=years)]
+    if years is None:
+        return s
+    if years == "ytd":
+        before = s.index[s.index < pd.Timestamp(year=s.index[-1].year, month=1, day=1)]
+    else:
+        before = s.index[s.index <= s.index[-1] - pd.DateOffset(years=years)]
+    return s.loc[before[-1]:] if len(before) else s
+
+
+def _rebased(s: pd.Series, years) -> pd.Series:
+    """Slice the horizon and rebase so the window starts at START_VALUE."""
+    s = window_slice(s, years)
     return s / s.iloc[0] * START_VALUE
 
 
+_TILES_JS = """
+<script>
+(function () {
+  var box = document.getElementById("__UID__"), cap = document.getElementById("__UID__-cap");
+  var data = JSON.parse(box.getAttribute("data-h")), tries = 0;
+  function render(label) {
+    var d = data[label]; if (!d) return;
+    box.innerHTML = d.tiles.map(function (t) {
+      return '<div class="stat ' + t[2] + '"><span>' + t[0] + '</span><b>' + t[1] + '</b></div>'; }).join("");
+    cap.textContent = d.caption;
+  }
+  function hook() {   // the first Plotly chart after the tiles is the equity chart with the horizon buttons
+    var gd = Array.prototype.filter.call(document.querySelectorAll(".plotly-graph-div"), function (g) {
+      return box.compareDocumentPosition(g) & Node.DOCUMENT_POSITION_FOLLOWING; })[0];
+    if (!gd || typeof gd.on !== "function") { if (tries++ < 150) setTimeout(hook, 200); return; }
+    gd.on("plotly_buttonclicked", function (e) { render(e.button.label); });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", hook); else hook();
+})();
+</script>"""
+
+
+def horizon_stat_tiles(s: pd.Series, periods: int, metrics=("CAGR", "Volatility", "Sharpe", "Max drawdown"),
+                       compare=None, static=None):
+    """Stat tiles that follow the horizon buttons (YTD / 1Y / 3Y / 5Y / All) of the next equity chart.
+    Values for every horizon are computed here; a small script swaps them when a button is clicked.
+    compare: (name, series) adds a 'vs name' tile with the return difference.
+    static: tiles that do not depend on the horizon, as (label, value, css-modifier)."""
+    import html as _html
+    import uuid
+    data = {}
+    for label, years in WINDOWS:
+        w = window_slice(s, years)
+        st = perf_stats(w, periods)
+        ytd = years == "ytd"
+        ret = w.iloc[-1] / w.iloc[0] - 1 if ytd else st["CAGR"]
+        tiles = []
+        for m in metrics:
+            if m == "CAGR":
+                tiles.append(("Return YTD" if ytd else "CAGR", pct(ret), "pos" if ret > 0 else "neg"))
+            elif m == "Volatility":
+                tiles.append(("Volatility", pct(st["Volatility"], False), ""))
+            elif m == "Sharpe":
+                tiles.append(("Sharpe", f'{st["Sharpe"]:.2f}', ""))
+            elif m == "Max drawdown":
+                tiles.append(("Max drawdown", pct(st["Max drawdown"], False), "neg"))
+            elif m == "Calmar":
+                tiles.append(("Calmar", f'{st["Calmar"]:.2f}', ""))
+        if compare:
+            cname, cs = compare
+            cw = window_slice(cs, years)
+            cret = cw.iloc[-1] / cw.iloc[0] - 1 if ytd else perf_stats(cw, periods)["CAGR"]
+            diff = ret - cret
+            tiles.append((f"vs {cname}" + ("" if ytd else " p.a."), f"{diff:+.1%}", "pos" if diff > 0 else "neg"))
+        tiles += list(static or [])
+        data[label] = {"tiles": tiles, "caption": f"Statistics for {WINDOW_NAMES[years]}: "
+                                                  f"{w.index[0]:%b %d, %Y} to {w.index[-1]:%b %d, %Y}"}
+
+    uid = "hs-" + uuid.uuid4().hex[:8]
+    first = data[WINDOWS[-1][0]]
+    tiles_html = "".join(f'<div class="stat {mod}"><span>{k}</span><b>{v}</b></div>' for k, v, mod in first["tiles"])
+    payload = _html.escape(json.dumps(data), quote=True)
+    display(HTML(f'<div class="stats" id="{uid}" data-h="{payload}">{tiles_html}</div>\n'
+                 f'<p class="asof horizon-caption" id="{uid}-cap">{first["caption"]}</p>'
+                 + _TILES_JS.replace("__UID__", uid)))
+
+
 def equity_chart(eqs: dict[str, tuple[pd.Series, str, dict]], ylog=True, height=400):
-    """Growth of $100,000. The 1Y / 3Y / 5Y / All buttons re-slice the data and restart every line at $100,000.
+    """Growth of $100,000. The YTD / 1Y / 3Y / 5Y / All buttons re-slice the data and restart every line at $100,000.
 
     eqs: name -> (series, color, extra trace kwargs). ylog applies to the full-history view;
     the shorter windows use a linear axis, which reads better over a few years.
