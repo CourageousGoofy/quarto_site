@@ -89,9 +89,10 @@ perf_table({"Strategy": s}, 52)
 
 ::: {.method}
 - **Universe:** 30 country and regional equity ETFs across developed and emerging markets.
-- **Factors:** each market is scored on **value**, **quality**, **growth** and **momentum**. 
+- **Factors:** each market is scored on **value**, **quality**, **growth** and **momentum**.
+- **Model version:** version 3, live from November 2026. The value, quality and momentum scores now also draw on analyst forecasts and share-issuance data. The backtest applies the current model to the whole history.
 - **Portfolio:** the strategy goes long the top-ranked markets and short the bottom-ranked, with equal weights on each side.
-- **No-hold list:** a few markets can be ranked but excluded from holdings (currently Indonesia). The next eligible market fills the slot, so each side always holds six.
+- **No-hold list:** a few markets can be ranked but excluded from holdings (currently `{python} " and ".join(sig.loc[sig["no_hold"].astype(bool), "market"]) or "none"`). The next eligible market fills the slot, so each side always holds six.
 - **Rebalance:** weekly.
 :::
 

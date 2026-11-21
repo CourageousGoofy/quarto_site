@@ -1,5 +1,4 @@
 date,price,trend_slow,trend_fast,fast_mode,regime,position,trade
-2026-10-23,3996.1,4458.57,4298.67,0,neutral,0,0
 2026-10-26,4016.71,4453.15,4298.04,0,neutral,0,0
 2026-10-27,4060.13,4448.61,4297.74,0,neutral,0,0
 2026-10-28,4067.35,4443.55,4294.75,0,neutral,0,0
@@ -19,3 +18,4 @@ date,price,trend_slow,trend_fast,fast_mode,regime,position,trade
 2026-11-17,3849.63,4351.22,4185.55,0,neutral,0,0
 2026-11-18,3725.38,4343.16,4171.12,0,neutral,0,0
 2026-11-19,3625.47,4335.08,4154.89,1,neutral,0,0
+2026-11-20,3538.49,4326.85,4139.61,1,neutral,0,0
