@@ -17,6 +17,8 @@ website:
         text: Overview
       - text: Strategies
         menu:
+          - href: strategies/core.qmd
+            text: "Core Portfolio"
           - href: strategies/dca.qmd
             text: "Global Equity Rotation"
           - href: strategies/gold.qmd

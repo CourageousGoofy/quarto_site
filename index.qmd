@@ -25,6 +25,11 @@ def pill(p):
     if p > 0:      return f'<span class="pill partial">PARTIAL {p:.0%}</span>'
     return '<span class="pill flat">FLAT</span>'
 
+c = m["core"]
+c_build = " + ".join(f'{x["weight"]:.0%}' for x in c["construction"])
+from site_helpers import load_backtest, perf_stats
+c_cagr = perf_stats(load_backtest("core")["portfolio"], 252)["CAGR"]
+
 btc_regime = {"b": "Bullish", "bn": "Bullish-neutral", "n": "Neutral", "sn": "Bearish-neutral", "s": "Bearish"}[b["regime"]]
 
 display(HTML(f"""
@@ -37,6 +42,13 @@ display(HTML(f"""
 </div>
 
 <div class="cards">
+  <a class="card-s featured" href="strategies/core.qmd">
+    <span class="k">Multi-asset · core + overlays</span>
+    <span class="t">Core Portfolio</span>
+    <span class="pill ls">{c_build}</span>
+    <span class="d">Passive core plus equity rotation, gold and bitcoin overlays · backtest CAGR <b>{c_cagr:+.1%}</b></span>
+    <span class="go">Construction & performance →</span>
+  </a>
   <a class="card-s" href="strategies/dca.qmd">
     <span class="k">Equities · long / short</span>
     <span class="t">Global Equity Rotation</span>

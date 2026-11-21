@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-19",
+  "generated": "2026-11-20",
   "btc": {
     "asof": "2026-11-19",
     "position": 0.0,
@@ -33,6 +33,33 @@
       "India",
       "Australia"
     ],
+    "backtest_end": "2026-11-19"
+  },
+  "core": {
+    "construction": [
+      {
+        "name": "Passive core",
+        "weight": 1.0,
+        "added": null
+      },
+      {
+        "name": "Global Equity Rotation",
+        "weight": 0.3,
+        "added": "2009-12"
+      },
+      {
+        "name": "Gold Trend",
+        "weight": 0.2,
+        "added": "2007-01"
+      },
+      {
+        "name": "Bitcoin Trend",
+        "weight": 0.2,
+        "added": "2021-01"
+      }
+    ],
+    "financing_spread": 0.01,
+    "backtest_start": "2006-12-29",
     "backtest_end": "2026-11-19"
   }
 }

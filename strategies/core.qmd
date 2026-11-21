@@ -1,0 +1,118 @@
+---
+title: "Core Portfolio"
+subtitle: "A passive core with three systematic overlays: equity rotation, gold and bitcoin"
+---
+
+```{python}
+import sys; sys.path.insert(0, "..")
+from site_helpers import *
+
+m = meta()["core"]
+bt = load_backtest("core")
+p, core = bt["portfolio"], bt["passive_core"]
+blocks = {c["name"]: c for c in m["construction"]}
+since_all = max(pd.Timestamp(c["added"]) for c in m["construction"] if c["added"])
+```
+
+::: {.panel-tabset}
+
+## Construction
+
+The Core Portfolio holds a passive core at 100% of capital and adds three systematic strategies on top. The strategies are financed with borrowing, so total exposure is above 100% of capital.
+
+```{python}
+allocation_bar(m["construction"], m["financing_spread"])
+```
+
+```{python}
+links = {"Global Equity Rotation": ("dca.qmd", "Equities · long / short",
+                                    "Ranks country equity markets on value, quality, growth and momentum. Long the top, short the bottom."),
+         "Gold Trend": ("gold.qmd", "Gold · long / flat", "Trend-following on gold, with dynamic risk control."),
+         "Bitcoin Trend": ("btc.qmd", "Crypto · long / flat", "Trend-following on bitcoin, with regime-based sizing.")}
+cards = [f"""<div class="card-s"><span class="k">Foundation · long only</span><span class="t">Passive core</span>
+  <span class="w">{blocks['Passive core']['weight']:.0%}</span>
+  <span class="d">A diversified, long-only allocation held at full capital and rebalanced monthly. Its holdings are not disclosed.</span></div>"""]
+for name, (href, kicker, desc) in links.items():
+    c = blocks[name]
+    cards.append(f"""<a class="card-s" href="{href}"><span class="k">{kicker}</span><span class="t">{name}</span>
+  <span class="w" style="color:{CORE_COLORS[name]}">+{c['weight']:.0%}</span>
+  <span class="d">{desc}</span><span class="d">In the portfolio since {pd.Timestamp(c['added']):%b %Y}.</span>
+  <span class="go">Strategy signals & backtest →</span></a>""")
+display(HTML(f'<div class="cards cards-2x2">{"".join(cards)}</div>'))
+```
+
+### How it fits together
+
+::: {.method}
+- **Passive core:** a diversified, long-only allocation. It sets the portfolio's baseline risk and return.
+- **Overlays:** three strategies with low correlation to each other and to the core. Each one is added on top of the core rather than carved out of it, so the core is never reduced to make room.
+- **Financing:** the part of the portfolio above 100% of capital is borrowed at the fed funds rate plus `{python} f"{m['financing_spread']:.0%}"`.
+- **Rebalance:** back to the target weights at the end of every month. Each overlay manages its own positions in between.
+- **Track record:** in the backtest, each overlay joins once its own track record begins. Bitcoin Trend joins in 2021.
+:::
+
+## Performance
+
+```{python}
+st = perf_stats(p, 252)
+st_core = perf_stats(core, 252)
+stat_tiles([
+    ("CAGR", pct(st["CAGR"]), "pos" if st["CAGR"] > 0 else "neg"),
+    ("Volatility", pct(st["Volatility"], False), ""),
+    ("Sharpe", f'{st["Sharpe"]:.2f}', ""),
+    ("Max drawdown", pct(st["Max drawdown"], False), "neg"),
+    ("vs passive core", f'{st["CAGR"] - st_core["CAGR"]:+.1%} / yr', "pos" if st["CAGR"] > st_core["CAGR"] else "neg"),
+])
+```
+
+<p class="asof">Daily, `{python} f"{p.index[0]:%b %Y}"` to `{python} f"{p.index[-1]:%b %Y}"`. Hypothetical backtest, after estimated transaction costs and financing costs. The comparison line is the passive core on its own, at 100% of capital.</p>
+
+### Growth of $100,000
+
+```{python}
+equity_chart({"Core Portfolio": (p, C_STRAT, {}),
+              "Passive core": (core, C_BENCH, {"dash": "dot", "width": 1.5})})
+```
+
+<p class="legend-note">Choose 1Y, 3Y or 5Y to restart every line at $100,000 at the beginning of that window. The overlays join in stages, so the gap between the lines widens over time.</p>
+
+### Drawdowns
+
+```{python}
+drawdown_chart({"Core Portfolio": (p, C_STRAT), "Passive core": (core, C_BENCH)})
+```
+
+### Calendar-year returns
+
+```{python}
+annual_returns_chart({"Core Portfolio": (p, C_STRAT), "Passive core": (core, C_BENCH)})
+```
+
+## Statistics
+
+### Full history
+
+<p class="asof">`{python} f"{p.index[0]:%b %Y}"` to `{python} f"{p.index[-1]:%b %Y}"`. Overlays join as their track records begin.</p>
+
+```{python}
+perf_table({"Core Portfolio": p, "Passive core": core}, 252)
+```
+
+### With all overlays live
+
+<p class="asof">From `{python} f"{since_all:%b %Y}"`, when Bitcoin Trend joins the portfolio.</p>
+
+```{python}
+cut = lambda s: s[s.index >= s.index[s.index < since_all][-1]]
+perf_table({"Core Portfolio": cut(p), "Passive core": cut(core)}, 252)
+```
+
+### Calendar-year returns
+
+```{python}
+annual_returns_table({"Core Portfolio": p, "Passive core": core})
+```
+
+<p class="legend-note">Sharpe is shown before the risk-free rate, as on the strategy pages. Calmar is CAGR divided by the maximum drawdown.</p>
+
+:::

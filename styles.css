@@ -80,3 +80,28 @@ h3 { font-weight: 600; }
   .hero h1 { font-size: 1.55rem; }
   .sc-right { text-align: left; }
 }
+
+/* ---------- core portfolio construction ---------- */
+.alloc { margin: 1rem 0 1.5rem; }
+.alloc-bar { display: flex; gap: 3px; height: 4.6rem; }
+.alloc-bar .seg { border-radius: .55rem; color: #fff; padding: .55rem .7rem; min-width: 0; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: center; }
+.alloc-bar .seg b { font-size: 1.35rem; font-weight: 800; line-height: 1.1; }
+.alloc-bar .seg span { font-size: .78rem; opacity: .92; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.alloc-brackets { display: flex; gap: 3px; margin-top: .4rem; }
+.alloc-brackets div { border-top: 2px solid var(--muted); padding-top: .3rem; font-size: .8rem; color: var(--muted); }
+.alloc-brackets div.fin { border-top-style: dashed; }
+.alloc-total { margin: .6rem 0 0; font-size: .9rem; color: var(--muted); }
+.card-s .w { font-size: 1.8rem; font-weight: 800; letter-spacing: -.02em; line-height: 1.1; }
+div.card-s:hover { transform: none; box-shadow: none; }
+.annual-table td { text-align: right; }
+.cards.cards-2x2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.card-s.featured { grid-column: 1 / -1; border-left: 6px solid var(--bs-primary); }
+.card-s.featured .pill { white-space: nowrap; }
+
+@media (max-width: 576px) {
+  .alloc-bar { height: auto; flex-wrap: wrap; }
+  .alloc-bar .seg { flex: 1 1 45% !important; }
+  .alloc-brackets { display: none; }
+  .cards.cards-2x2 { grid-template-columns: 1fr; }
+}

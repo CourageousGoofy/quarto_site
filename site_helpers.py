@@ -287,3 +287,50 @@ def dca_factor_table(df: pd.DataFrame):
 
 def pct(v, signed=True):
     return f"{v:+.1%}" if signed else f"{v:.1%}"
+
+
+# ------------------------------------------------------------ core portfolio
+CORE_COLORS = {"Passive core": "#64748b", "Global Equity Rotation": C_STRAT, "Gold Trend": C_PRICE,
+               "Bitcoin Trend": "#8b5cf6"}
+CORE_SHORT = {"Global Equity Rotation": "Equity rotation", "Gold Trend": "Gold", "Bitcoin Trend": "Bitcoin"}
+
+
+def allocation_bar(construction: list[dict], spread: float):
+    """Stacked bar of the portfolio's building blocks, on a scale of total gross weight,
+    with brackets for the capital (100%) and the financed part (above 100%)."""
+    total = sum(c["weight"] for c in construction)
+    segs = "".join(
+        f'<div class="seg" style="flex:{c["weight"]};background:{CORE_COLORS.get(c["name"], C_BENCH)}" '
+        f'title="{c["name"]}: {c["weight"]:.0%}"><b>{c["weight"]:.0%}</b><span>{CORE_SHORT.get(c["name"], c["name"])}</span></div>'
+        for c in construction)
+    fin = total - 1
+    display(HTML(f"""
+<div class="alloc">
+  <div class="alloc-bar">{segs}</div>
+  <div class="alloc-brackets">
+    <div style="flex:1"><span>Capital · 100%</span></div>
+    <div style="flex:{fin}" class="fin"><span>Financed · {fin:.0%} (fed funds + {spread:.0%})</span></div>
+  </div>
+  <p class="alloc-total">Gross exposure <b>{total:.0%}</b> of capital</p>
+</div>"""))
+
+
+def annual_returns_table(eqs: dict[str, pd.Series]):
+    """Calendar-year returns, most recent year first; the current year is year-to-date."""
+    cols = {}
+    for name, s in eqs.items():
+        yr = s.resample("YE").last()
+        cols[name] = pd.concat([s.iloc[:1], yr]).pct_change().dropna().set_axis(yr.index.year)
+    df = pd.DataFrame(cols).sort_index(ascending=False)
+    df.index = [f"{y} YTD" if y == df.index.max() and s.index[-1].month < 12 else str(y) for y in df.index]
+    df.index.name = "Year"
+    names = list(eqs)
+    if len(names) == 2:
+        df["Difference"] = df[names[0]] - df[names[1]]
+
+    def color(v):
+        return "" if pd.isna(v) else f"color:{C_LONG if v > 0 else C_SHORT}"
+
+    sty = (df.style.format("{:+.1%}", na_rep="–").map(color)
+           .set_table_attributes('class="table table-sm table-hover perf-table annual-table"'))
+    display(HTML(f'<div class="table-scroll">{sty.to_html()}</div>'))
