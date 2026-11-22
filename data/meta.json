@@ -20,18 +20,18 @@
     "longs": [
       "Korea",
       "Taiwan",
+      "Vietnam",
+      "Greece",
       "US - SP500",
-      "Netherlands",
-      "China",
-      "Thailand"
+      "Netherlands"
     ],
     "shorts": [
-      "Mexico",
-      "Saudi Arabia",
-      "US - R2000",
-      "Greece",
+      "Hong Kong",
       "Australia",
-      "India"
+      "Mexico",
+      "India",
+      "US - R2000",
+      "Brazil"
     ],
     "backtest_end": "2026-11-20"
   },
