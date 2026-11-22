@@ -343,9 +343,9 @@ def dca_factor_table(df: pd.DataFrame):
     t = df.sort_values("rank").copy()
     if "no_hold" in t:
         t.loc[t["no_hold"].astype(bool), "pos"] = 9          # display code for "no-hold"
-    t = t[["rank", "market", "ticker", "pos", "value", "quality", "growth", "momentum", "total_score"]]
+    t = t[["rank", "market", "ticker", "pos", "value", "quality", "momentum", "total_score"]]
     t = t.rename(columns={"rank": "Rank", "market": "Market", "ticker": "ETF", "pos": "Signal", "value": "Value",
-                          "quality": "Quality", "growth": "Growth", "momentum": "Momentum", "total_score": "Total"})
+                          "quality": "Quality", "momentum": "Momentum", "total_score": "Total"})
     lab = {1: "LONG", -1: "SHORT", 0: "–", 9: "NO-HOLD"}
 
     def heat(v):
@@ -357,8 +357,8 @@ def dca_factor_table(df: pd.DataFrame):
 
     sty = (t.style.hide(axis="index")
            .format({"Rank": "{:g}", "Signal": lambda v: lab.get(v, v),
-                    **{c: "{:+.2f}" for c in ["Value", "Quality", "Growth", "Momentum", "Total"]}})
-           .map(heat, subset=["Value", "Quality", "Growth", "Momentum", "Total"])
+                    **{c: "{:+.2f}" for c in ["Value", "Quality", "Momentum", "Total"]}})
+           .map(heat, subset=["Value", "Quality", "Momentum", "Total"])
            .map(lambda v: f"color:{C_LONG if v == 1 else C_SHORT if v == -1 else C_FLAT}; font-weight:700",
                 subset=["Signal"])
            .set_table_attributes('class="table table-sm table-hover signal-table factor-table"'))

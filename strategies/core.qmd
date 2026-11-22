@@ -26,7 +26,7 @@ allocation_bar(m["construction"], m["financing_spread"])
 
 ```{python}
 links = {"Global Equity Rotation": ("dca.qmd", "Equities · long / short",
-                                    "Ranks country equity markets on value, quality, growth and momentum. Long the top, short the bottom."),
+                                    "Ranks country equity markets on value, quality and momentum. Long the top, short the bottom."),
          "Gold Trend": ("gold.qmd", "Gold · long / flat", "Trend-following on gold, with dynamic risk control."),
          "Bitcoin Trend": ("btc.qmd", "Crypto · long / flat", "Trend-following on bitcoin, with regime-based sizing.")}
 cards = [f"""<div class="card-s"><span class="k">Foundation · long only</span><span class="t">Passive core</span>
