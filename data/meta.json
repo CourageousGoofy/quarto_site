@@ -35,6 +35,13 @@
     ],
     "backtest_end": "2026-11-20"
   },
+  "vg": {
+    "asof": "2026-10-30",
+    "trade_date": "2026-11-02",
+    "position": 0.607,
+    "trend_score": 1.0,
+    "backtest_long_value_share": 0.319
+  },
   "core": {
     "construction": [
       {

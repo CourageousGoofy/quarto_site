@@ -2,11 +2,12 @@
 title: "About"
 ---
 
-This site publishes the latest output of three systematic strategies I run, together with their historical backtests:
+This site publishes the latest output of four systematic strategies I run, together with their historical backtests. The Core Portfolio combines a passive core with Global Equity Rotation, Gold Trend and Bitcoin Trend.
 
 | Strategy | Asset class | Style | Rebalance |
 |---|---|---|---|
 | [Global Equity Rotation](strategies/dca.qmd) | Country equity ETFs | Multi-factor long / short | Weekly |
+| [Value-Growth Rotation](strategies/value_growth.qmd) | US large-cap value vs growth ETFs | Trend-following, long / short | Monthly |
 | [Gold Trend](strategies/gold.qmd) | Gold | Trend-following, long / flat | Daily |
 | [Bitcoin Trend](strategies/btc.qmd) | Bitcoin | Trend-following, long / flat | Daily |
 
@@ -19,7 +20,7 @@ Each strategy page has three tabs:
 ## Notes on the numbers
 
 - **No look-ahead:** a position decided at the close of day *t* earns the return from *t* to *t + 1*.
-- **Costs:** gold and bitcoin results are shown **before** transaction costs. DCA results are **net** of trading costs.
+- **Costs:** gold and bitcoin results are shown **before** transaction costs. Global Equity Rotation and Value-Growth Rotation results are **net** of trading and short-borrow costs.
 - **Cash:** when the gold or bitcoin strategy is flat, its cash earns the overnight fed funds rate (rate × days held / 365).
 - **Simulated results:** backtests are hypothetical and were produced with the benefit of hindsight. Live results can differ because of costs, slippage, data revisions and model changes.
 

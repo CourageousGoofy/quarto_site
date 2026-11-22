@@ -1,8 +1,9 @@
 # Alpine Quantamental Investment
 
-A Quarto website that publishes the latest signals and backtest results for three systematic strategies:
+A Quarto website that publishes the latest signals and backtest results for four systematic strategies and the Core Portfolio (passive core plus the equity rotation, gold and bitcoin strategies):
 
 - **Global Equity Rotation:** weekly multi-factor long / short across 30 country ETFs
+- **Value-Growth Rotation:** monthly long / short trend model on US large-cap value vs growth
 - **Gold Trend:** daily long / flat trend model on gold
 - **Bitcoin Trend:** daily long / flat trend model on BTC/USD
 

@@ -369,10 +369,80 @@ def pct(v, signed=True):
     return f"{v:+.1%}" if signed else f"{v:.1%}"
 
 
+# ----------------------------------------------------- value-growth rotation
+C_VALUE = C_ALT          # long value / short growth
+C_GROWTH = "#8b5cf6"     # long growth / short value
+VG_STRENGTH = {1.0: "Strong value trend", 0.5: "Leaning value", 0.0: "Mixed: no position",
+               -0.5: "Leaning growth", -1.0: "Strong growth trend"}
+
+
+def vg_side(position: float) -> str:
+    if position > 0:
+        return "LONG VALUE / SHORT GROWTH"
+    if position < 0:
+        return "LONG GROWTH / SHORT VALUE"
+    return "FLAT"
+
+
+def vg_signal_card(m: dict):
+    p = m["position"]
+    color = C_VALUE if p > 0 else C_GROWTH if p < 0 else C_FLAT
+    size = f"{abs(p):.2f}x per side" if p else "no position"
+    display(HTML(f"""
+<div class="signal-card long" style="border-left-color:{color}">
+  <div class="sc-left"><span class="sc-label">Position</span>
+    <span class="sc-state" style="color:{color}">{vg_side(p)}</span></div>
+  <div class="sc-right"><span>Signal date</span><b>{m['asof']}</b>
+    <span class="sc-detail">{VG_STRENGTH.get(round(m['trend_score'] * 2) / 2, '')} · {size} · traded at the close on {m['trade_date']}</span></div>
+</div>"""))
+
+
+def vg_relative_chart(daily: pd.DataFrame, height=380):
+    """Value / growth relative total return over the signal window, shaded by the position held."""
+    fig = go.Figure()
+    d = daily.reset_index(drop=True)
+    seg = (d["position"].ne(d["position"].shift())).cumsum()          # runs of an unchanged position
+    for _, g in d.groupby(seg):
+        p = float(g["position"].iloc[0])
+        i1 = g.index[-1] + 1
+        x1 = d["date"].iloc[i1] if i1 < len(d) else g["date"].iloc[-1] + pd.Timedelta(hours=12)
+        a = min(0.06 + 0.16 * abs(p), 0.3)
+        color = _rgba(C_VALUE, a) if p > 0 else _rgba(C_GROWTH, a) if p < 0 else _rgba(C_FLAT, 0.07)
+        fig.add_vrect(x0=g["date"].iloc[0], x1=x1, fillcolor=color, line_width=0, layer="below")
+    fig.add_scatter(x=d["date"], y=d["relative"], name="Value vs growth", mode="lines",
+                    line=dict(color=C_PRICE, width=2.2), hovertemplate="%{y:,.1f}")
+    _layout(fig, height, yfmt=",.0f", legend=False)
+    fig.update_yaxes(title_text=f"Value / growth, start = 100")
+    fig.update_xaxes(tickformat="%b %Y")
+    _show(fig)
+
+
+def vg_signal_table(sig: pd.DataFrame):
+    t = sig.sort_values("date").copy()
+    t["chg"] = t["position"].diff().fillna(0)
+    t = t.iloc[::-1]
+    out = pd.DataFrame({"Signal date": t["date"].dt.strftime("%Y-%m-%d"), "Traded": t["trade_date"].dt.strftime("%Y-%m-%d"),
+                        "Trend": (t["trend_score"] * 2).round().div(2).map(VG_STRENGTH),
+                        "Position": t["position"], "Change": t["chg"]})
+
+    def pos_fmt(v):
+        return "Flat" if v == 0 else (f"Value {v:.2f}x" if v > 0 else f"Growth {-v:.2f}x")
+
+    def pos_style(v):
+        return f"color:{C_VALUE if v > 0 else C_GROWTH if v < 0 else C_FLAT}; font-weight:600"
+
+    sty = (out.style.hide(axis="index")
+           .format({"Position": pos_fmt, "Change": lambda v: f"{v:+.2f}x" if v else ""})
+           .map(pos_style, subset=["Position"])
+           .set_table_attributes('class="table table-sm table-hover signal-table"'))
+    display(HTML(f'<div class="table-scroll">{sty.to_html()}</div>'))
+
+
 # ------------------------------------------------------------ core portfolio
-CORE_COLORS = {"Passive core": "#64748b", "Global Equity Rotation": C_STRAT, "Gold Trend": C_PRICE,
-               "Bitcoin Trend": "#8b5cf6"}
-CORE_SHORT = {"Global Equity Rotation": "Equity rotation", "Gold Trend": "Gold", "Bitcoin Trend": "Bitcoin"}
+CORE_COLORS = {"Passive core": "#64748b", "Global Equity Rotation": C_STRAT, "Value-Growth Rotation": C_ALT,
+               "Gold Trend": C_PRICE, "Bitcoin Trend": "#8b5cf6"}
+CORE_SHORT = {"Global Equity Rotation": "Equity rotation", "Value-Growth Rotation": "Value-growth",
+              "Gold Trend": "Gold", "Bitcoin Trend": "Bitcoin"}
 
 
 def allocation_bar(construction: list[dict], spread: float):
@@ -380,7 +450,7 @@ def allocation_bar(construction: list[dict], spread: float):
     with brackets for the capital (100%) and the financed part (above 100%)."""
     total = sum(c["weight"] for c in construction)
     segs = "".join(
-        f'<div class="seg" style="flex:{c["weight"]};background:{CORE_COLORS.get(c["name"], C_BENCH)}" '
+        f'<div class="seg{" narrow" if c["weight"] / total < 0.08 else ""}" style="flex:{c["weight"]};background:{CORE_COLORS.get(c["name"], C_BENCH)}" '
         f'title="{c["name"]}: {c["weight"]:.0%}"><b>{c["weight"]:.0%}</b><span>{CORE_SHORT.get(c["name"], c["name"])}</span></div>'
         for c in construction)
     fin = total - 1

@@ -17,8 +17,11 @@ from IPython.display import HTML, display
 from site_helpers import meta
 
 m = meta()
-b, g, d = m["btc"], m["gold"], m["dca"]
+b, g, d, v = m["btc"], m["gold"], m["dca"], m["vg"]
 asof = max(b["asof"], g["asof"], d["asof"])
+from site_helpers import VG_STRENGTH
+v_pill = ('<span class="pill flat">FLAT</span>' if v["position"] == 0 else
+          f'<span class="pill ls">{"LONG VALUE" if v["position"] > 0 else "LONG GROWTH"}</span>')
 
 def pill(p):
     if p >= 0.999: return '<span class="pill long">LONG</span>'
@@ -41,7 +44,7 @@ display(HTML(f"""
   <span class="asof-pill">Signals as of {asof}</span>
 </div>
 
-<div class="cards">
+<div class="cards cards-2x2">
   <a class="card-s featured" href="strategies/core.qmd">
     <span class="k">Multi-asset · core + overlays</span>
     <span class="t">Core Portfolio</span>
@@ -54,6 +57,13 @@ display(HTML(f"""
     <span class="t">Global Equity Rotation</span>
     <span class="pill ls">{len(d['longs'])} LONG · {len(d['shorts'])} SHORT</span>
     <span class="d">Top long: <b>{', '.join(d['longs'][:3])}</b><br>Top short: <b>{', '.join(d['shorts'][-3:][::-1])}</b></span>
+    <span class="go">Signals & backtest →</span>
+  </a>
+  <a class="card-s" href="strategies/value_growth.qmd">
+    <span class="k">US equity styles · absolute return</span>
+    <span class="t">Value-Growth Rotation</span>
+    {v_pill}
+    <span class="d">{VG_STRENGTH[round(v['trend_score'] * 2) / 2]} · month-end signal {v['asof']}</span>
     <span class="go">Signals & backtest →</span>
   </a>
   <a class="card-s" href="strategies/gold.qmd">

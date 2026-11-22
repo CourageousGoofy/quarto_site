@@ -1,0 +1,91 @@
+---
+title: "Value-Growth Rotation"
+subtitle: "Absolute-return, long / short trend-following on US large-cap value versus growth"
+---
+
+```{python}
+import sys; sys.path.insert(0, "..")
+from site_helpers import *
+
+m = meta()["vg"]
+sig = pd.read_csv(DATA / "vg_signals.csv", parse_dates=["date", "trade_date"])
+daily = pd.read_csv(DATA / "vg_daily.csv", parse_dates=["date"])
+bt = load_backtest("vg")
+```
+
+::: {.panel-tabset}
+
+## Latest signal
+
+```{python}
+vg_signal_card(m)
+```
+
+### Value versus growth over the latest signal window
+
+```{python}
+vg_relative_chart(daily)
+```
+
+<p class="legend-note">The line is the total return of US large-cap value relative to growth (Russell 1000 Value vs Russell 1000 Growth ETFs, dividends included), starting at 100. It rises when value outperforms. Background shading shows the position held: teal = long value / short growth, purple = long growth / short value, grey = flat. Darker shading means a larger position.</p>
+
+### Recent month-end signals
+
+```{python}
+vg_signal_table(sig)
+```
+
+<p class="legend-note">Position is the dollar amount held on each side per $1 of strategy capital. For example, "Value 0.61x" means $0.61 long value and $0.61 short growth. Each signal is computed at the month-end close and traded at the next day's close.</p>
+
+[Download the latest signal file (CSV)](../data/vg_signals.csv){download="vg_signals.csv"}
+
+## Backtest
+
+```{python}
+s, bm = bt["strategy"], bt["benchmark"]
+horizon_stat_tiles(s, 252, metrics=("CAGR", "Volatility", "Sharpe", "Max drawdown", "Calmar"))
+```
+
+<p class="asof">Daily, `{python} f"{bt.index[0]:%b %Y}"` to `{python} f"{bt.index[-1]:%b %Y}"`, on the Russell 1000 Value and Growth ETFs (total return). Net of trading costs and short-borrow costs. The strategy return is the long / short spread only: it earns no interest on its capital. The comparison line holds long value / short growth at all times, without timing or costs.</p>
+
+### Growth of $100,000
+
+```{python}
+equity_chart({"Strategy": (s, C_STRAT, {}),
+              "Static long value / short growth": (bm, C_BENCH, {"dash": "dot", "width": 1.5})})
+```
+
+<p class="legend-note">Choose YTD, 1Y, 3Y or 5Y to restart every line at $100,000 at the beginning of that window. The statistics above switch to the same window. The static line shows how far value lagged growth over most of this period.</p>
+
+### Drawdowns
+
+```{python}
+drawdown_chart({"Strategy": (s, C_STRAT), "Static long value / short growth": (bm, C_BENCH)})
+```
+
+### Calendar-year returns
+
+```{python}
+annual_returns_chart({"Strategy": (s, C_STRAT), "Static long value / short growth": (bm, C_BENCH)})
+```
+
+### Summary statistics
+
+```{python}
+perf_table({"Strategy": s, "Static long value / short growth": bm}, 252)
+```
+
+<p class="legend-note">Returns come in a few strong years, with long flat stretches in between. On index data from before the ETFs existed (1995-2000), the same rule lost money.</p>
+
+## How it works
+
+::: {.method}
+- **Role:** a standalone absolute-return strategy. It is not part of the Core Portfolio.
+- **Universe:** US large caps, split into value and growth (Russell 1000 Value and Russell 1000 Growth ETFs). The strategy holds equal dollar amounts long one side and short the other, so it has no net dollar exposure. It can still carry some market sensitivity, because growth stocks make up a large share of the market index.
+- **Why it works:** leadership between value and growth comes in regimes that last quarters to years. Interest-rate cycles, sector earnings cycles and investor flows that chase the recent winning style all move slowly, so the relative trend tends to persist.
+- **Signal:** four trend measures on the value-versus-growth spread, from a couple of months to a year. Each one votes for value or growth.
+- **Sizing:** when all four votes agree, the strategy takes a full position. When three agree, it takes half. When the votes split two-two, it stays flat and uses no capital. Position size is also scaled to keep risk roughly constant as the spread's volatility changes.
+- **Rebalance:** monthly. The signal is computed at the close on the last trading day of the month and traded at the next day's close.
+:::
+
+:::

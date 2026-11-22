@@ -6,7 +6,7 @@ project:
 
 website:
   title: "AQI"
-  description: "Alpine Quantamental Investment (AQI): latest signals and backtest results for systematic strategies in global equities, gold and bitcoin."
+  description: "Alpine Quantamental Investment (AQI): latest signals and backtest results for systematic strategies in global equities, US equity styles, gold and bitcoin."
   site-url: "https://CourageousGoofy.github.io/quarto_site"
   favicon: assets/favicon.svg
   page-navigation: true
@@ -21,6 +21,8 @@ website:
             text: "Core Portfolio"
           - href: strategies/dca.qmd
             text: "Global Equity Rotation"
+          - href: strategies/value_growth.qmd
+            text: "Value-Growth Rotation"
           - href: strategies/gold.qmd
             text: "Gold Trend"
           - href: strategies/btc.qmd
